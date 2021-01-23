@@ -1,0 +1,41 @@
+.phonebookTitle {
+  text-align: center;
+}
+
+.form {
+  margin: 0 auto 20px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  width: 360px;
+  border: 1px solid black;
+}
+
+.label {
+  margin-bottom: 20px;
+  display: flex;
+}
+
+.labelDescription {
+  display: block;
+  width: 84px;
+}
+
+.input {
+  border: 1px solid black;
+  border-radius: 5px;
+}
+
+.addContactBtn {
+  margin: 0 auto;
+  padding: 2px 0;
+  width: 100px;
+  line-height: 26px;
+  border: 1px solid ghostwhite;
+  border-radius: 5px;
+  font-family: 'Montserrat', sans-serif;
+  background-color: dodgerblue;
+  color: white;
+  cursor: pointer;
+  outline: none;
+}

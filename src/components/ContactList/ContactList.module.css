@@ -1,0 +1,43 @@
+.contactsList {
+  list-style: none;
+  margin: 0 auto;
+  padding: 0;
+  width: 360px;
+}
+
+.ContactsListItem {
+  display: flex;
+  justify-content: space-between;
+}
+
+.ContactsListItem:not(:last-of-type) {
+  margin-bottom: 10px;
+}
+
+.contact {
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+  width: 260px;
+}
+
+.name {
+  width: 130px;
+}
+
+.number {
+  width: 130px;
+}
+
+.deleteBtn {
+  padding: 0;
+  width: 80px;
+  height: 26px;
+  border: 1px solid ghostwhite;
+  border-radius: 5px;
+  font-family: 'Montserrat', sans-serif;
+  background-color: dodgerblue;
+  color: white;
+  cursor: pointer;
+  outline: none;
+}
