@@ -2,7 +2,6 @@
   "name": "react-template",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://malyshkoserhii.github.io/goit-react-hw-06-phonebook",
   "dependencies": {
     "@reduxjs/toolkit": "^1.5.0",
     "@testing-library/jest-dom": "^5.11.6",
@@ -28,7 +27,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d build",
+    "api-server": "json-server --port 4040 --delay 300 --watch db.json"
   },
   "eslintConfig": {
     "extends": [
