@@ -3,6 +3,15 @@ import * as actions from './actions';
 
 axios.defaults.baseURL = 'http://localhost:4040';
 
+export const fetchContacts = () => dispatch => {
+  dispatch(actions.fetchContactsRequest());
+
+  axios
+    .get('/contacts')
+    .then(({ data }) => dispatch(actions.fetchContactsSuccess(data)))
+    .catch(error => dispatch(actions.fetchContactsError(error)));
+};
+
 export const addContact = (name, number) => dispatch => {
   const contact = { name, number };
 

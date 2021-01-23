@@ -7,8 +7,14 @@ import s from './ContactForm.module.css';
 
 class ContactForm extends Component {
   state = {
-    name: '',
-    number: '',
+    name: {
+      value: '',
+      error: false,
+    },
+    number: {
+      value: '',
+      error: false,
+    },
   };
 
   static propTypes = {
@@ -22,7 +28,10 @@ class ContactForm extends Component {
   handleContactInputChange = e => {
     const { name, value } = e.currentTarget;
     this.setState({
-      [name]: value,
+      [name]: {
+        value,
+        error: false,
+      },
     });
   };
 
@@ -30,27 +39,48 @@ class ContactForm extends Component {
     e.preventDefault();
     const { name, number } = this.state;
 
-    if (this.state.name.trim() === '') {
-      alert('Enter the name');
-      return;
+    const valid = this.isValid(name.value, number.value);
+
+    if (valid) {
+      this.props.onAddNewContact(name.value, number.value);
+      this.reset();
+    }
+  };
+
+  isValid = (name, number) => {
+    let validation = true;
+
+    if (name.trim() === '') {
+      this.setState(prevState => ({
+        ...prevState,
+        name: {
+          ...prevState.name,
+          error: true,
+        },
+      }));
+
+      validation = false;
+    }
+
+    if (number.trim() === '') {
+      this.setState(prevState => ({
+        ...prevState,
+        number: {
+          ...prevState.number,
+          error: true,
+        },
+      }));
+
+      validation = false;
     }
 
     if (this.getExistedContact(name)) {
       alert(`${name} is alredy in contacts.`);
-      this.reset();
-      return;
+
+      validation = false;
     }
 
-    if (this.state.number.trim() === '') {
-      alert('Enter the phone number');
-      return;
-    }
-
-    if (name && number) {
-      this.props.onAddNewContact(name, number);
-      this.reset();
-      return;
-    }
+    return validation;
   };
 
   getExistedContact = name => {
@@ -59,7 +89,16 @@ class ContactForm extends Component {
   };
 
   reset() {
-    this.setState({ name: '', number: '' });
+    this.setState({
+      name: {
+        value: '',
+        error: false,
+      },
+      number: {
+        value: '',
+        error: false,
+      },
+    });
   }
 
   render() {
@@ -74,11 +113,12 @@ class ContactForm extends Component {
             <input
               type="text"
               name="name"
-              value={name}
+              value={name.value}
               id={this.nameInputId}
               className={s.input}
               onChange={this.handleContactInputChange}
             />
+            {name.error && <span>Not valid</span>}
           </label>
 
           <label htmlFor={this.phoneNumberId} className={s.label}>
@@ -86,11 +126,12 @@ class ContactForm extends Component {
             <input
               type="tel"
               name="number"
-              value={number}
+              value={number.value}
               id={this.phoneNumberId}
               className={s.input}
               onChange={this.handleContactInputChange}
             />
+            {number.error && <span>Not valid</span>}
           </label>
 
           <button type="submit" className={s.addContactBtn}>
