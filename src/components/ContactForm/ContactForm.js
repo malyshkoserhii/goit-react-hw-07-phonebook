@@ -8,8 +8,6 @@ import s from './ContactForm.module.css';
 const ContactForm = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
-  const [nameError, setNameError] = useState(false);
-  const [numberError, setNumberError] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -34,9 +32,24 @@ const ContactForm = () => {
 
   const handleContactSubmit = e => {
     e.preventDefault();
-    const valid = isValid(name, number);
 
-    if (valid) {
+    if (name.trim() === '') {
+      alert('Please enter the name');
+      return;
+    }
+
+    if (number.trim() === '') {
+      alert('Please enter the number');
+      return;
+    }
+
+    if (getExistedContact(name)) {
+      alert(`${name} is alredy in contacts.`);
+      reset();
+      return;
+    }
+
+    if (name && number) {
       dispatch(contactsOperations.addContact(name, number));
       reset();
     }
@@ -46,35 +59,9 @@ const ContactForm = () => {
     return contacts.find(contact => contact.name === name);
   };
 
-  const isValid = (name, number) => {
-    let validation = true;
-
-    if (name.trim() === '') {
-      setNameError(true);
-
-      validation = false;
-    }
-
-    if (number.trim() === '') {
-      setNumberError(true);
-
-      validation = false;
-    }
-
-    if (getExistedContact(name)) {
-      alert(`${name} is alredy in contacts.`);
-
-      validation = false;
-    }
-
-    return validation;
-  };
-
   const reset = () => {
     setName('');
     setNumber('');
-    setNameError(false);
-    setNumberError(false);
   };
 
   return (
@@ -91,7 +78,6 @@ const ContactForm = () => {
             className={s.input}
             onChange={handleContactInputChange}
           />
-          {nameError && <span>Not valid</span>}
         </label>
 
         <label htmlFor={phoneNumberId} className={s.label}>
@@ -104,7 +90,6 @@ const ContactForm = () => {
             className={s.input}
             onChange={handleContactInputChange}
           />
-          {numberError && <span>Not valid</span>}
         </label>
 
         <button type="submit" className={s.addContactBtn}>

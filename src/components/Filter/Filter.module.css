@@ -1,6 +1,6 @@
 .contactsSection {
   margin: 0 auto 20px;
-  width: 360px;
+  width: 320px;
 }
 
 .contactsTitle {
@@ -21,4 +21,10 @@
   width: 162px;
   border: 1px solid black;
   border-radius: 5px;
+}
+
+@media screen and (min-width: 768px) {
+  .contactsSection {
+    width: 420px;
+  }
 }
