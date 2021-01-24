@@ -1,80 +1,67 @@
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import shortid from 'shortid';
 import * as contactsOperations from '../../redux/contacts-operations';
 import s from './ContactForm.module.css';
 
-class ContactForm extends Component {
-  state = {
-    name: {
-      value: '',
-      error: false,
-    },
-    number: {
-      value: '',
-      error: false,
-    },
-  };
+const ContactForm = () => {
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
+  const [nameError, setNameError] = useState(false);
+  const [numberError, setNumberError] = useState(false);
 
-  static propTypes = {
-    onAddNewContact: PropTypes.func,
-    exsisted: PropTypes.func,
-  };
+  const dispatch = useDispatch();
 
-  nameInputId = shortid.generate();
-  phoneNumberId = shortid.generate();
+  const contacts = useSelector(state => state.phonebook.items);
 
-  handleContactInputChange = e => {
-    const { name, value } = e.currentTarget;
-    this.setState({
-      [name]: {
-        value,
-        error: false,
-      },
-    });
-  };
+  const nameInputId = shortid.generate();
+  const phoneNumberId = shortid.generate();
 
-  handleContactSubmit = e => {
-    e.preventDefault();
-    const { name, number } = this.state;
-
-    const valid = this.isValid(name.value, number.value);
-
-    if (valid) {
-      this.props.onAddNewContact(name.value, number.value);
-      this.reset();
+  const handleContactInputChange = event => {
+    const { name, value } = event.target;
+    switch (name) {
+      case 'name':
+        setName(value);
+        break;
+      case 'number':
+        setNumber(value);
+        break;
+      default:
+        return;
     }
   };
 
-  isValid = (name, number) => {
+  const handleContactSubmit = e => {
+    e.preventDefault();
+    const valid = isValid(name, number);
+
+    if (valid) {
+      dispatch(contactsOperations.addContact(name, number));
+      reset();
+    }
+  };
+
+  const getExistedContact = name => {
+    return contacts.find(contact => contact.name === name);
+  };
+
+  const isValid = (name, number) => {
     let validation = true;
 
     if (name.trim() === '') {
-      this.setState(prevState => ({
-        ...prevState,
-        name: {
-          ...prevState.name,
-          error: true,
-        },
-      }));
+      setNameError(true);
 
       validation = false;
     }
 
     if (number.trim() === '') {
-      this.setState(prevState => ({
-        ...prevState,
-        number: {
-          ...prevState.number,
-          error: true,
-        },
-      }));
+      setNumberError(true);
 
       validation = false;
     }
 
-    if (this.getExistedContact(name)) {
+    if (getExistedContact(name)) {
       alert(`${name} is alredy in contacts.`);
 
       validation = false;
@@ -83,73 +70,53 @@ class ContactForm extends Component {
     return validation;
   };
 
-  getExistedContact = name => {
-    const { contacts } = this.props;
-    return contacts.find(contact => contact.name === name);
+  const reset = () => {
+    setName('');
+    setNumber('');
+    setNameError(false);
+    setNumberError(false);
   };
 
-  reset() {
-    this.setState({
-      name: {
-        value: '',
-        error: false,
-      },
-      number: {
-        value: '',
-        error: false,
-      },
-    });
-  }
+  return (
+    <>
+      <h1 className={s.phonebookTitle}>Phonebook</h1>
+      <form className={s.form} onSubmit={handleContactSubmit}>
+        <label htmlFor={nameInputId} className={s.label}>
+          <span className={s.labelDescription}> Name</span>
+          <input
+            type="text"
+            name="name"
+            value={name}
+            id={nameInputId}
+            className={s.input}
+            onChange={handleContactInputChange}
+          />
+          {nameError && <span>Not valid</span>}
+        </label>
 
-  render() {
-    const { name, number } = this.state;
+        <label htmlFor={phoneNumberId} className={s.label}>
+          <span className={s.labelDescription}>Number</span>
+          <input
+            type="tel"
+            name="number"
+            value={number}
+            id={phoneNumberId}
+            className={s.input}
+            onChange={handleContactInputChange}
+          />
+          {numberError && <span>Not valid</span>}
+        </label>
 
-    return (
-      <>
-        <h1 className={s.phonebookTitle}>Phonebook</h1>
-        <form className={s.form} onSubmit={this.handleContactSubmit}>
-          <label htmlFor={this.nameInputId} className={s.label}>
-            <span className={s.labelDescription}> Name</span>
-            <input
-              type="text"
-              name="name"
-              value={name.value}
-              id={this.nameInputId}
-              className={s.input}
-              onChange={this.handleContactInputChange}
-            />
-            {name.error && <span>Not valid</span>}
-          </label>
+        <button type="submit" className={s.addContactBtn}>
+          Add contact
+        </button>
+      </form>
+    </>
+  );
+};
 
-          <label htmlFor={this.phoneNumberId} className={s.label}>
-            <span className={s.labelDescription}>Number</span>
-            <input
-              type="tel"
-              name="number"
-              value={number.value}
-              id={this.phoneNumberId}
-              className={s.input}
-              onChange={this.handleContactInputChange}
-            />
-            {number.error && <span>Not valid</span>}
-          </label>
+ContactForm.propTypes = {
+  onAddNewContact: PropTypes.func,
+};
 
-          <button type="submit" className={s.addContactBtn}>
-            Add contact
-          </button>
-        </form>
-      </>
-    );
-  }
-}
-
-const mapStateToProps = state => ({
-  contacts: state.phonebook.items,
-});
-
-const mapDispatchToProps = dispatch => ({
-  onAddNewContact: (name, number) =>
-    dispatch(contactsOperations.addContact(name, number)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(ContactForm);
+export default ContactForm;

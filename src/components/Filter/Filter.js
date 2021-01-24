@@ -1,10 +1,14 @@
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import shortid from 'shortid';
 import PropTypes from 'prop-types';
-import * as types from '../../redux/actions';
+import { getFilter } from '../../redux/selectors';
+import * as actions from '../../redux/actions';
 import s from './Filter.module.css';
 
-const Filter = ({ value, changeFilter }) => {
+const Filter = () => {
+  const value = useSelector(getFilter);
+  const dispatch = useDispatch();
+
   const filterInputId = shortid.generate();
 
   return (
@@ -18,7 +22,7 @@ const Filter = ({ value, changeFilter }) => {
           value={value}
           id={filterInputId}
           className={s.input}
-          onChange={changeFilter}
+          onChange={e => dispatch(actions.changeFilter(e.target.value))}
         />
       </label>
     </section>
@@ -26,16 +30,8 @@ const Filter = ({ value, changeFilter }) => {
 };
 
 Filter.propTypes = {
-  value: PropTypes.string.isRequired,
+  value: PropTypes.string,
   changeFilter: PropTypes.func,
 };
 
-const mapStateToProps = state => ({
-  value: state.phonebook.filter,
-});
-
-const mapDispatchToProps = dispatch => ({
-  changeFilter: e => dispatch(types.changeFilter(e.target.value)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Filter);
+export default Filter;

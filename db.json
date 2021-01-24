@@ -4,6 +4,16 @@
       "name": "Rosie Simpson",
       "number": "459-12-56",
       "id": 1
+    },
+    {
+      "name": "asterix",
+      "number": "459-12-56",
+      "id": 2
+    },
+    {
+      "name": "Qwe Qwe",
+      "number": "123",
+      "id": 3
     }
   ]
 }
