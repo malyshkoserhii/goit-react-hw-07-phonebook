@@ -31,3 +31,10 @@ export const deleteContact = contactId => dispatch => {
     .then(() => dispatch(actions.deleteContactSuccess(contactId)))
     .catch(error => dispatch(actions.deleteContactError(error)));
 };
+
+export const editContact = contact => dispatch => {
+  axios
+    .patch(`/contacts/${contact.id}`, contact)
+    .then(() => dispatch(actions.editContactSuccess(contact)))
+    .catch(error => dispatch(actions.editContactError(error)));
+};
