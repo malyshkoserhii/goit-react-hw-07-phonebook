@@ -3,7 +3,7 @@
 }
 
 .form {
-  margin: 0 auto 20px;
+  margin: 0 auto;
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -37,6 +37,12 @@
   color: white;
   cursor: pointer;
   outline: none;
+}
+
+.loaderWrapper {
+  margin: 0 auto;
+  height: 60px;
+  width: 60px;
 }
 
 @media screen and (min-width: 768px) {

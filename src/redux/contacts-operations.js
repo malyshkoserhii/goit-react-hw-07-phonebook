@@ -33,6 +33,8 @@ export const deleteContact = contactId => dispatch => {
 };
 
 export const editContact = contact => dispatch => {
+  dispatch(actions.editContactRequest());
+
   axios
     .patch(`/contacts/${contact.id}`, contact)
     .then(() => dispatch(actions.editContactSuccess(contact)))

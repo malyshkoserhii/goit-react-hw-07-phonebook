@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import shortid from 'shortid';
+import Loader from 'react-loader-spinner';
 import * as contactsOperations from '../../redux/contacts-operations';
 import s from './ContactForm.module.css';
 
@@ -12,6 +13,7 @@ const ContactForm = () => {
   const dispatch = useDispatch();
 
   const contacts = useSelector(state => state.phonebook.items);
+  const isLoading = useSelector(state => state.phonebook.loading);
 
   const nameInputId = shortid.generate();
   const phoneNumberId = shortid.generate();
@@ -96,6 +98,17 @@ const ContactForm = () => {
           Add contact
         </button>
       </form>
+      <div className={s.loaderWrapper}>
+        {isLoading && (
+          <Loader
+            type="ThreeDots"
+            color="#00BFFF"
+            height={60}
+            width={60}
+            timeout={2000}
+          />
+        )}
+      </div>
     </>
   );
 };
